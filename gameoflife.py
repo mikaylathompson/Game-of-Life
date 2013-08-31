@@ -1,7 +1,6 @@
 #gameoflife.py
 import random
 import copy
-import time
 from Tkinter import *
 
 def initBoard(n):
@@ -27,22 +26,11 @@ def countNeighbors(board, row, col):
 		jrange = [n - 1, 0, 1]
 	else:
 		jrange = [-1, 0, -col]
-
 	for i in irange:
 		for j in jrange:
 			if not (i == 0 and j == 0):
 				count += board[row + i][col + j]
 	return count
-
-def doCounts(t1):
-	n = len(t1)
-	t0 = copy.deepcopy(t1)
-	for row in range(n):
-		for col in range(n):
-			nbrs = countNeighbors(t1, row, col)
-			t0[row][col] = nbrs
-	return t0
-
 
 def tic(t1):
 	n = len(t1)
@@ -58,38 +46,48 @@ def tic(t1):
 					t1[row][col] = 0
 	return t1
 
-def boardToScreen(w,board):
+def countLiving(board):
+	count = 0
+	for row in board:
+		for cell in row:
+			count += cell
+	return count
+
+def boardToScreen(w,board, s):
 	for i in range(len(board)):
 		for j in range(len(board)):
 			if board[j][i] == 1:
-				w.create_rectangle(25*(i+1), 25*(j+1), 25*(i+2), 25*(j+2), fill="blue")
+				w.create_rectangle(s*(i+1), s*(j+1), s*(i+2), s*(j+2), fill="blue")
 			else:
-				w.create_rectangle(25*(i+1), 25*(j+1), 25*(i+2), 25*(j+2), fill="gray")
-
+				w.create_rectangle(s*(i+1), s*(j+1), s*(i+2), s*(j+2), fill="gray")
 
 def printBoard(board):
 	for row in board:
 		print row
 	print
 
-n = 8
-
+n = 30
+blockSize = 20
+delay = 100
 
 b = initBoard(n)
-printBoard(b)
-
-
+# font = ("Aller Display",30)
+# font = ("Digital dream Fat",30)
 
 
 master = Tk()
-w = Canvas(master, width=250, height=250)
+w = Canvas(master, width=n*blockSize+120, height=n*blockSize+50)
 w.pack()
 
-for i in range(100):
+for i in range(1001):
 	w.delete(ALL)
-	boardToScreen(w, b)
+	boardToScreen(w, b, blockSize)
+	w.create_text(blockSize*(n+2.7)+15, n*blockSize/3, text=str(i), font=("ONRAMP",40), fill="red")
+	w.create_text(blockSize*(n+2.7)+15, n*blockSize/3 - 40, text="Time:", font=("ONRAMP",25), fill="red")
+	w.create_text(blockSize*(n+2.7)+15, 2*n*blockSize/3, text=str(countLiving(b)), font=("ONRAMP",40), fill="red")
+	w.create_text(blockSize*(n+2.7)+15, 2*n*blockSize/3 - 40, text="Alive:", font=("ONRAMP",25), fill="red")
 	b = tic(b)
-	w.after(250)
+	w.after(delay)
 	w.update()
 
 mainloop()
