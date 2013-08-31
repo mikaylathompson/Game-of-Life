@@ -1,6 +1,7 @@
 #gameoflife.py
 import random
 import copy
+import time
 from Tkinter import *
 
 def initBoard(n):
@@ -71,7 +72,7 @@ def printBoard(board):
 		print row
 	print
 
-n = 5
+n = 8
 
 
 b = initBoard(n)
@@ -84,10 +85,11 @@ master = Tk()
 w = Canvas(master, width=250, height=250)
 w.pack()
 
-boardToScreen(w, b)
-# w.create_line(0, 0, 200, 100)
-# w.create_line(0, 100, 200, 0, fill="red", dash=(4, 4))
-# w.create_rectangle(50, 25, 150, 75, fill="blue")
-
+for i in range(100):
+	w.delete(ALL)
+	boardToScreen(w, b)
+	b = tic(b)
+	w.after(250)
+	w.update()
 
 mainloop()
