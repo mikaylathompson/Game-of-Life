@@ -1,7 +1,7 @@
 #gameoflife.py
 import random
 import copy
-import pygame
+from Tkinter import *
 
 def initBoard(n):
 	board = []
@@ -57,6 +57,14 @@ def tic(t1):
 					t1[row][col] = 0
 	return t1
 
+def boardToScreen(w,board):
+	for i in range(len(board)):
+		for j in range(len(board)):
+			if board[j][i] == 1:
+				w.create_rectangle(25*(i+1), 25*(j+1), 25*(i+2), 25*(j+2), fill="blue")
+			else:
+				w.create_rectangle(25*(i+1), 25*(j+1), 25*(i+2), 25*(j+2), fill="gray")
+
 
 def printBoard(board):
 	for row in board:
@@ -67,24 +75,19 @@ n = 5
 
 
 b = initBoard(n)
-printBoard(tic(b))
+printBoard(b)
 
 
-pygame.init() 
 
-#create the screen
-window = pygame.display.set_mode((640, 480)) 
 
-#draw a line - see http://www.pygame.org/docs/ref/draw.html for more 
-pygame.draw.line(window, (255, 255, 255), (0, 0), (30, 50))
+master = Tk()
+w = Canvas(master, width=250, height=250)
+w.pack()
 
-#draw it to the screen
-pygame.display.flip() 
+boardToScreen(w, b)
+# w.create_line(0, 0, 200, 100)
+# w.create_line(0, 100, 200, 0, fill="red", dash=(4, 4))
+# w.create_rectangle(50, 25, 150, 75, fill="blue")
 
-#input handling (somewhat boilerplate code):
-while True: 
-   for event in pygame.event.get(): 
-      if event.type == pygame.QUIT: 
-          sys.exit(0) 
-      else: 
-          print event 
+
+mainloop()
