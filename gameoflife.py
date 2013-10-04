@@ -61,31 +61,38 @@ def boardToScreen(w,board, s): 			#Draws board on screen by drawing n^2
 			else:
 				w.create_rectangle(s*(i+1), s*(j+1), s*(i+2), s*(j+2), fill="gray")
 
-#### SETTINGS ####
+def startRun(w, n, tics, bs):
+	b = initBoard(n)
+	for i in range(tics):
+		w.delete(ALL)
+		boardToScreen(w, b, bs)
+		w.create_text(bs*(n+2.7)+15, n*bs/3, 
+						text=str(i), 
+						font=("ONRAMP",40), 
+						fill="red")
+		w.create_text(bs*(n+2.7)+15, n*bs/3 - 30, 
+						text="Time:", 
+						font=("ONRAMP",25), 
+						fill="red")
+		w.create_text(bs*(n+2.7)+15, 2*n*bs/3, 
+						text=str(countLiving(b)), 
+						font=("ONRAMP",40), 
+						fill="red")
+		w.create_text(bs*(n+2.7)+15, 2*n*bs/3 - 30, 
+						text="Alive:", 
+						font=("ONRAMP",25), 
+						fill="red")
+		b = tic(b)
+		w.after(delay)
+		w.update()
+
 n = 30				# n = size of board
 blockSize = 20		# blockSize = size of each square on display
-delay = 100 		# delay = time between frames in display
-
-# Set up canvas
+delay = 150 		# delay = time between frames in display
 master = Tk()
-w = Canvas(master, width=n*blockSize+120, height=n*blockSize+50)
+w = Canvas(master, 
+			width=n*blockSize+120, 
+			height=n*blockSize+50)
 w.pack()
-
-# Initialize a random board
-b = initBoard(n)
-
-# Loop through time.  
-# For each step, clear screen, draw squares, and label with time and # alive.
-# Calculate the new board, delay, update screen.
-for i in range(1001):
-	w.delete(ALL)
-	boardToScreen(w, b, blockSize)
-	w.create_text(blockSize*(n+2.7)+15, n*blockSize/3, text=str(i), font=("ONRAMP",40), fill="red")
-	w.create_text(blockSize*(n+2.7)+15, n*blockSize/3 - 40, text="Time:", font=("ONRAMP",25), fill="red")
-	w.create_text(blockSize*(n+2.7)+15, 2*n*blockSize/3, text=str(countLiving(b)), font=("ONRAMP",40), fill="red")
-	w.create_text(blockSize*(n+2.7)+15, 2*n*blockSize/3 - 40, text="Alive:", font=("ONRAMP",25), fill="red")
-	b = tic(b)
-	w.after(delay)
-	w.update()
-
+startRun(w, n, 1001, blockSize)
 mainloop()
